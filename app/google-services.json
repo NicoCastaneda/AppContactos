@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "612329798513",
+    "project_id": "contactos-af9e4",
+    "storage_bucket": "contactos-af9e4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:612329798513:android:1a26a38c37f89a696d54d0",
+        "android_client_info": {
+          "package_name": "com.example.gestiondecontactos"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBCnPTa00rbZ9Z5c-hvjnUSKJABRAc2ybo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
