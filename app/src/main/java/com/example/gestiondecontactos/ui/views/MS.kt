@@ -73,12 +73,7 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
             agregarContactoButton(onClick = { showAddContactDialog.value = true })
         }
 
-
-
-
-
-
-
+        //Ventana Flotante
         if (showAddContactDialog.value) {
             AgregarContactoDialog(
                 onDismiss = { showAddContactDialog.value = false },
@@ -92,7 +87,6 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
 
 
 }
-
 
 @Composable
 fun listaContactos(navController: NavController, contactos: List<Contacto>) {
@@ -114,14 +108,20 @@ fun ContactoItem(navController: NavController, contacto: Contacto) {
     ) {
         Box(modifier = Modifier.padding(10.dp)) {
             Column {
-                Row{
-                    Image(painterResource(R.drawable.perfilcontactos), "Foto_Perfil", Modifier.size(50.dp).padding(0.dp, 0.dp, 10.dp, 0.dp))
+                Row {
+                    Image(
+                        painterResource(R.drawable.perfilcontactos),
+                        "Foto_Perfil",
+                        Modifier
+                            .size(50.dp)
+                            .padding(0.dp, 0.dp, 10.dp, 0.dp)
+                    )
                     Column {
                         Text("${contacto.nombre}", fontWeight = FontWeight.Bold)
                         Text("${contacto.telefono}")
                     }
                 }
-               
+
             }
         }
     }

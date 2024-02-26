@@ -30,9 +30,6 @@ class MSViewModel {
         }
     }
 
-    fun eliminarContacto(nombre: String) {
-
-    }
 
     fun obtenerContactos(): Flow<List<Contacto>> = flow {
         try {
