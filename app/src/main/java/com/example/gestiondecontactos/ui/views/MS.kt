@@ -1,5 +1,6 @@
 package com.example.gestiondecontactos.ui.views
 
+import android.health.connect.datatypes.HeightRecord
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -63,13 +64,17 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
+        Box(Modifier.fillMaxWidth().weight(0.9f)) {
+            listaContactos(navController, contactosState)
+        }
+
         Box(
-            modifier = Modifier
+            Modifier
                 .fillMaxSize()
-                .weight(0.8f),
+                .weight(0.1f),
             contentAlignment = Alignment.BottomStart
         ) {
-            listaContactos(navController, contactosState)
+
             agregarContactoButton(onClick = { showAddContactDialog.value = true })
         }
 

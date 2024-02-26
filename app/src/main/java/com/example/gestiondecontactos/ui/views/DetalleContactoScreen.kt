@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -23,11 +24,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
@@ -38,16 +42,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.gestiondecontactos.Contacto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavController, contactoId: String) {
-    val contacto = remember { mutableStateOf<Contacto?>(null) }
+    var contacto by remember { mutableStateOf<Contacto?>(null) }
 
-    LaunchedEffect(contactoId) {
-        contacto.value = detalleViewModel.obtenerContacto(contactoId)
+    LaunchedEffect(Unit) {
+        // Obtener los datos del contacto cuando se carga la pantalla
+        val detalle = detalleViewModel.obtenerContacto(contactoId)
+        if (detalle != null) {
+            contacto = detalle
+        }
     }
 
     Scaffold(
@@ -67,14 +76,37 @@ fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavContro
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            contacto.value?.let { it -> detalle(it) }
+            //contacto.value?.let { it -> detalle(detalleViewModel, it, navController, contactoId) }
+            contacto?.let { detalle(detalleViewModel, it, navController, contactoId) }
         }
 
     }
 }
 
 @Composable
-fun detalle(contacto: Contacto) {
+fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController: NavController,contactoId: String) {
+
+    val showDialog = remember { mutableStateOf(false) }
+
+    // Función para manejar el clic en el botón de editar
+    val onEditButtonClick: () -> Unit = {
+        showDialog.value = true
+    }
+
+    // Diálogo para editar el contacto
+    if (showDialog.value) {
+        EditarContactoDialog(
+            onDismiss = { showDialog.value = false },
+            onSaveContact = { nombre, numero, correo ->
+                detalleViewModel.editarContacto(contactoId, nombre, numero, correo){ }
+                showDialog.value = false
+            },
+            contacto = contacto,
+            navController = navController
+        )
+    }
+
+
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -113,7 +145,7 @@ fun detalle(contacto: Contacto) {
             contentAlignment = Alignment.BottomCenter
         ) {
             Row {
-                editarButton(onClick = { })
+                editarButton(onClick = onEditButtonClick)
                 eliminarButton(onClick = { })
             }
 
@@ -136,5 +168,50 @@ fun eliminarButton(onClick: () -> Unit, icon: ImageVector = Icons.Rounded.Delete
     Button(onClick = onClick) {
         Icon(icon, contentDescription = null, modifier = Modifier.padding(0.dp, 0.dp, 15.dp, 0.dp))
         Text("Eliminar", fontSize = 18.sp)
+    }
+}
+
+@Composable
+fun EditarContactoDialog(
+    onDismiss: () -> Unit,
+    onSaveContact: (String, String, String) -> Unit,
+    contacto: Contacto,
+    navController: NavController
+) {
+    var nombre by remember { mutableStateOf(contacto.nombre) }
+    var numero by remember { mutableStateOf(contacto.telefono) }
+    var correo by remember { mutableStateOf(contacto.correo) }
+
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            TextField(
+                value = nombre,
+                onValueChange = { nombre = it },
+                label = { Text("Nombre") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = numero,
+                onValueChange = { numero = it },
+                label = { Text("Número") }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            TextField(
+                value = correo,
+                onValueChange = { correo = it },
+                label = { Text("Correo") }
+            )
+            Spacer(modifier = Modifier.height(16.dp))
+            Button(onClick = {
+                onSaveContact(nombre, numero, correo)
+                navController.popBackStack()
+            }
+            ) {
+                Text("Guardar")
+            }
+        }
     }
 }
