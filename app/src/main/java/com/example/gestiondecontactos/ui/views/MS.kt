@@ -102,7 +102,7 @@ fun ContactoItem(navController: NavController, contacto: Contacto) {
     Column(modifier = Modifier
 
         .padding(15.dp, 5.dp, 15.dp, 0.dp)
-        .clickable { navController.navigate("detalleContacto") }
+        .clickable { navController.navigate("detalleContacto/${contacto.nombre}") }
         .fillMaxWidth()
         .background(Color(237, 244, 244), shape = RoundedCornerShape(5.dp))
     ) {

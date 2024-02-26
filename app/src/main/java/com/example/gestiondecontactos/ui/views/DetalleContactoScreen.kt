@@ -1,5 +1,6 @@
 package com.example.gestiondecontactos.ui.views
 
+import DetalleViewModel
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -24,22 +25,30 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gestiondecontactos.R
-import com.example.gestiondecontactos.ui.viewModels.DetalleViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.example.gestiondecontactos.Contacto
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavController) {
+fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavController, contactoId: String) {
+    val contacto = remember { mutableStateOf<Contacto?>(null) }
+
+    LaunchedEffect(contactoId) {
+        contacto.value = detalleViewModel.obtenerContacto(contactoId)
+    }
 
     Scaffold(
         topBar = {
@@ -58,14 +67,14 @@ fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavContro
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            detalle()
+            contacto.value?.let { it -> detalle(it) }
         }
 
     }
 }
 
 @Composable
-fun detalle() {
+fun detalle(contacto: Contacto) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
@@ -78,19 +87,19 @@ fun detalle() {
                 .width(100.dp)
         )
         Text(
-            text = "Nombre",
+            text = contacto.nombre,
             Modifier.padding(0.dp, 0.dp, 0.dp, 15.dp),
             fontWeight = FontWeight.Bold,
             fontSize = 30.sp
         )
         Text(
-            text = "Número",
+            text = contacto.telefono,
             Modifier.padding(0.dp, 15.dp, 0.dp, 15.dp),
             fontWeight = FontWeight.SemiBold,
             fontSize = 25.sp
         )
         Text(
-            text = "Correo",
+            text = contacto.correo,
             Modifier.padding(0.dp),
             fontWeight = FontWeight.SemiBold,
             fontSize = 25.sp
