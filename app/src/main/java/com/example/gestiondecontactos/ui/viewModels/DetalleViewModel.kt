@@ -43,5 +43,7 @@ class DetalleViewModel {
         }
     }
 
-
+fun eliminarContacto(contactoId: String){
+    contactosRef.document(contactoId).delete()
+}
 }

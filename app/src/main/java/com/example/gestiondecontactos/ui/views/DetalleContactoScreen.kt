@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -87,10 +88,13 @@ fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavContro
 fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController: NavController,contactoId: String) {
 
     val showDialog = remember { mutableStateOf(false) }
+    val showDeleteDialog = remember { mutableStateOf(false) }
 
-    // Función para manejar el clic en el botón de editar
     val onEditButtonClick: () -> Unit = {
         showDialog.value = true
+    }
+    val onDeleteButtonClick: () -> Unit = {
+        showDeleteDialog.value = true
     }
 
     // Diálogo para editar el contacto
@@ -103,6 +107,18 @@ fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController
             },
             contacto = contacto,
             navController = navController
+        )
+    }
+
+    //Diálogo para eliminar el contacto
+    if (showDeleteDialog.value) {
+        EliminarContactoDialog(
+            onDismiss = { showDeleteDialog.value = false },
+            onDeleteContact = {
+                detalleViewModel.eliminarContacto(contactoId)
+                showDeleteDialog.value = false
+                navController.popBackStack()
+            }
         )
     }
 
@@ -146,7 +162,7 @@ fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController
         ) {
             Row {
                 editarButton(onClick = onEditButtonClick)
-                eliminarButton(onClick = { })
+                eliminarButton(onClick = onDeleteButtonClick)
             }
 
         }
@@ -211,6 +227,34 @@ fun EditarContactoDialog(
             }
             ) {
                 Text("Guardar")
+            }
+        }
+    }
+}
+
+@Composable
+fun EliminarContactoDialog(
+    onDismiss: () -> Unit,
+    onDeleteContact: () -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Column(
+            modifier = Modifier.padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text("¿Estás seguro de que quieres eliminar este contacto?")
+            Spacer(modifier = Modifier.height(16.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                Button(onClick = onDeleteContact) {
+                    Text("Confirmar")
+                }
+                Button(onClick = onDismiss) {
+                    Text("Cancelar")
+                }
             }
         }
     }
