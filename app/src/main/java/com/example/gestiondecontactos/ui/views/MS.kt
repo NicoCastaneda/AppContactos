@@ -1,6 +1,5 @@
 package com.example.gestiondecontactos.ui.views
 
-import android.health.connect.datatypes.HeightRecord
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,19 +16,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -39,12 +32,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -52,9 +43,6 @@ import androidx.navigation.NavController
 import com.example.gestiondecontactos.Contacto
 import com.example.gestiondecontactos.R
 import com.example.gestiondecontactos.ui.viewModels.MSViewModel
-import kotlinx.coroutines.flow.Flow
-import java.time.format.TextStyle
-
 
 @Composable
 fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
@@ -86,7 +74,6 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
             agregarContactoButton(onClick = { showAddContactDialog.value = true })
         }
 
-        //Ventana Flotante
         if (showAddContactDialog.value) {
             AgregarContactoDialog(
                 onDismiss = { showAddContactDialog.value = false },
@@ -97,8 +84,6 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
             )
         }
     }
-
-
 }
 
 @Composable
@@ -113,7 +98,6 @@ fun listaContactos(navController: NavController, contactos: List<Contacto>) {
 @Composable
 fun ContactoItem(navController: NavController, contacto: Contacto) {
     Column(modifier = Modifier
-
         .padding(15.dp, 5.dp, 15.dp, 0.dp)
         .clickable { navController.navigate("detalleContacto/${contacto.nombre}") }
         .fillMaxWidth()
@@ -134,7 +118,6 @@ fun ContactoItem(navController: NavController, contacto: Contacto) {
                         Text("${contacto.telefono}")
                     }
                 }
-
             }
         }
     }
@@ -149,55 +132,47 @@ fun agregarContactoButton(onClick: () -> Unit, icon: ImageVector = Icons.Rounded
 }
 
 @Composable
-fun AgregarContactoDialog(
-    onDismiss: () -> Unit,
-    onSaveContact: (String, String, String) -> Unit
-) {
+fun AgregarContactoDialog(onDismiss: () -> Unit, onSaveContact: (String, String, String) -> Unit) {
     var nombre by remember { mutableStateOf("") }
     var numero by remember { mutableStateOf("") }
     var correo by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
 
-            Box(
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black.copy(alpha = 0.8f))
+                .padding(5.dp)
+        )
+        {
+            Column(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(Color.Black.copy(alpha = 0.8f))
-                    .padding(5.dp)
-            )
-            {
-                Column(
-                    modifier = Modifier
-                        .padding(16.dp)
-                        .width(IntrinsicSize.Max)
-                ) {
-                    TextField(
-                        value = nombre,
-                        onValueChange = { nombre = it },
-                        label = { Text("Nombre") }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextField(
-                        value = numero,
-                        onValueChange = { numero = it },
-                        label = { Text("Número") }
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    TextField(
-                        value = correo,
-                        onValueChange = { correo = it },
-                        label = { Text("Correo") }
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(onClick = { onSaveContact(nombre, numero, correo) }) {
-                        Text("Guardar")
-
-                    }
+                    .padding(16.dp)
+                    .width(IntrinsicSize.Max)
+            ) {
+                TextField(
+                    value = nombre,
+                    onValueChange = { nombre = it },
+                    label = { Text("Nombre") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = numero,
+                    onValueChange = { numero = it },
+                    label = { Text("Número") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = correo,
+                    onValueChange = { correo = it },
+                    label = { Text("Correo") }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = { onSaveContact(nombre, numero, correo) }) {
+                    Text("Guardar")
                 }
-
             }
         }
-
     }
-
-
+}

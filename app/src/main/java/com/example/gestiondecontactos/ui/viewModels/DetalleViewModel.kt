@@ -1,6 +1,5 @@
 import com.example.gestiondecontactos.Contacto
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -20,7 +19,13 @@ class DetalleViewModel {
         }
     }
 
-    fun editarContacto(contactoId: String, nombre: String, telefono: String, correo: String,callback: (Contacto?) -> Unit) {
+    fun editarContacto(
+        contactoId: String,
+        nombre: String,
+        telefono: String,
+        correo: String,
+        callback: (Contacto?) -> Unit
+    ) {
         GlobalScope.launch(Dispatchers.IO) {
             val oldContacto = obtenerContacto(contactoId)
             callback(oldContacto)
@@ -32,9 +37,7 @@ class DetalleViewModel {
                         "telefono" to telefono,
                         "correo" to correo
                     )
-                    // Elimina el documento con el ID anterior
                     contactosRef.document(contactoId).delete()
-                    // Crea un nuevo documento con el nuevo nombre como ID
                     contactosRef.document(nombre).set(nuevoContacto)
                 } catch (e: Exception) {
                     println("${e.message}")
@@ -43,7 +46,7 @@ class DetalleViewModel {
         }
     }
 
-fun eliminarContacto(contactoId: String){
-    contactosRef.document(contactoId).delete()
-}
+    fun eliminarContacto(contactoId: String) {
+        contactosRef.document(contactoId).delete()
+    }
 }

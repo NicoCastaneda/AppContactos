@@ -14,11 +14,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Delete
 import androidx.compose.material.icons.rounded.Edit
 import androidx.compose.material3.Button
@@ -84,7 +82,6 @@ fun DetalleContacto(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            //contacto.value?.let { it -> detalle(detalleViewModel, it, navController, contactoId) }
             contacto?.let { detalle(detalleViewModel, it, navController, contactoId) }
         }
 
@@ -98,7 +95,6 @@ fun detalle(
     navController: NavController,
     contactoId: String
 ) {
-
     val showDialog = remember { mutableStateOf(false) }
     val showDeleteDialog = remember { mutableStateOf(false) }
 
@@ -133,7 +129,6 @@ fun detalle(
             }
         )
     }
-
 
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -176,10 +171,7 @@ fun detalle(
                 editarButton(onClick = onEditButtonClick)
                 eliminarButton(onClick = onDeleteButtonClick)
             }
-
         }
-
-
     }
 }
 
@@ -250,7 +242,6 @@ fun EditarContactoDialog(
                 }
             }
         }
-
     }
 }
 
@@ -264,7 +255,6 @@ fun EliminarContactoDialog(
             Modifier
                 .clip(RoundedCornerShape(16.dp))
                 .background(Color.Black.copy(alpha = 0.8f))
-
         ) {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -290,6 +280,5 @@ fun EliminarContactoDialog(
                 }
             }
         }
-
     }
 }
