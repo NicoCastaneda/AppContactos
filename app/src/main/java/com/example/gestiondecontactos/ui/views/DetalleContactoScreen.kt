@@ -3,6 +3,7 @@ package com.example.gestiondecontactos.ui.views
 import DetalleViewModel
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.rounded.Add
@@ -40,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.gestiondecontactos.R
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
@@ -49,7 +52,11 @@ import com.example.gestiondecontactos.Contacto
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavController, contactoId: String) {
+fun DetalleContacto(
+    detalleViewModel: DetalleViewModel,
+    navController: NavController,
+    contactoId: String
+) {
     var contacto by remember { mutableStateOf<Contacto?>(null) }
 
     LaunchedEffect(Unit) {
@@ -85,7 +92,12 @@ fun DetalleContacto(detalleViewModel: DetalleViewModel, navController: NavContro
 }
 
 @Composable
-fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController: NavController,contactoId: String) {
+fun detalle(
+    detalleViewModel: DetalleViewModel,
+    contacto: Contacto,
+    navController: NavController,
+    contactoId: String
+) {
 
     val showDialog = remember { mutableStateOf(false) }
     val showDeleteDialog = remember { mutableStateOf(false) }
@@ -102,7 +114,7 @@ fun detalle(detalleViewModel: DetalleViewModel, contacto: Contacto,navController
         EditarContactoDialog(
             onDismiss = { showDialog.value = false },
             onSaveContact = { nombre, numero, correo ->
-                detalleViewModel.editarContacto(contactoId, nombre, numero, correo){ }
+                detalleViewModel.editarContacto(contactoId, nombre, numero, correo) { }
                 showDialog.value = false
             },
             contacto = contacto,
@@ -199,36 +211,46 @@ fun EditarContactoDialog(
     var correo by remember { mutableStateOf(contacto.correo) }
 
     Dialog(onDismissRequest = onDismiss) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = numero,
-                onValueChange = { numero = it },
-                label = { Text("Número") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = correo,
-                onValueChange = { correo = it },
-                label = { Text("Correo") }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = {
-                onSaveContact(nombre, numero, correo)
-                navController.popBackStack()
-            }
+
+        Box(
+            modifier = Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black.copy(alpha = 0.8f))
+                .padding(5.dp)
+        )
+        {
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Text("Guardar")
+                TextField(
+                    value = nombre,
+                    onValueChange = { nombre = it },
+                    label = { Text("Nombre") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = numero,
+                    onValueChange = { numero = it },
+                    label = { Text("Número") }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                TextField(
+                    value = correo,
+                    onValueChange = { correo = it },
+                    label = { Text("Correo") }
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Button(onClick = {
+                    onSaveContact(nombre, numero, correo)
+                    navController.popBackStack()
+                }
+                ) {
+                    Text("Guardar")
+                }
             }
         }
+
     }
 }
 
@@ -238,24 +260,36 @@ fun EliminarContactoDialog(
     onDeleteContact: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
-        Column(
-            modifier = Modifier.padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+        Box(
+            Modifier
+                .clip(RoundedCornerShape(16.dp))
+                .background(Color.Black.copy(alpha = 0.8f))
+
         ) {
-            Text("¿Estás seguro de que quieres eliminar este contacto?")
-            Spacer(modifier = Modifier.height(16.dp))
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceEvenly
+            Column(
+                modifier = Modifier.padding(16.dp),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
             ) {
-                Button(onClick = onDeleteContact) {
-                    Text("Confirmar")
-                }
-                Button(onClick = onDismiss) {
-                    Text("Cancelar")
+                Text(
+                    "¿Estás seguro de que quieres eliminar este contacto?",
+                    color = Color.White,
+                    fontSize = 18.sp
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Button(onClick = onDeleteContact) {
+                        Text("Confirmar")
+                    }
+                    Button(onClick = onDismiss) {
+                        Text("Cancelar")
+                    }
                 }
             }
         }
+
     }
 }

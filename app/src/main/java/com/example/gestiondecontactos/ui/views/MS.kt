@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,9 +26,11 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.ArrowForward
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +55,7 @@ import com.example.gestiondecontactos.ui.viewModels.MSViewModel
 import kotlinx.coroutines.flow.Flow
 import java.time.format.TextStyle
 
+
 @Composable
 fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
     val showAddContactDialog = remember { mutableStateOf(false) }
@@ -64,7 +68,11 @@ fun MainScreen(msViewModel: MSViewModel, navController: NavController) {
             fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
-        Box(Modifier.fillMaxWidth().weight(0.9f)) {
+        Box(
+            Modifier
+                .fillMaxWidth()
+                .weight(0.9f)
+        ) {
             listaContactos(navController, contactosState)
         }
 
@@ -150,32 +158,46 @@ fun AgregarContactoDialog(
     var correo by remember { mutableStateOf("") }
 
     Dialog(onDismissRequest = onDismiss) {
-        Column(
-            modifier = Modifier
-                .padding(16.dp)
-                .width(IntrinsicSize.Max)
-        ) {
-            TextField(
-                value = nombre,
-                onValueChange = { nombre = it },
-                label = { Text("Nombre") }
+
+            Box(
+                modifier = Modifier
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color.Black.copy(alpha = 0.8f))
+                    .padding(5.dp)
             )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = numero,
-                onValueChange = { numero = it },
-                label = { Text("Número") }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            TextField(
-                value = correo,
-                onValueChange = { correo = it },
-                label = { Text("Correo") }
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(onClick = { onSaveContact(nombre, numero, correo) }) {
-                Text("Guardar")
+            {
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .width(IntrinsicSize.Max)
+                ) {
+                    TextField(
+                        value = nombre,
+                        onValueChange = { nombre = it },
+                        label = { Text("Nombre") }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = numero,
+                        onValueChange = { numero = it },
+                        label = { Text("Número") }
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    TextField(
+                        value = correo,
+                        onValueChange = { correo = it },
+                        label = { Text("Correo") }
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(onClick = { onSaveContact(nombre, numero, correo) }) {
+                        Text("Guardar")
+
+                    }
+                }
+
             }
         }
+
     }
-}
+
+
